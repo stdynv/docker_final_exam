@@ -50,7 +50,7 @@ navigate to to the folder where the composers exists
 ``` 
 cd /humans-best-friend
 ```
-1 - run docker build image compose file 
+run docker build image compose file 
 ```docker
 docker-compose -f docker-compose.build.yml build
 ```
@@ -58,143 +58,13 @@ it will build multiple images found on the dockerfile of the folders, to view th
 ```docker
 docker iamges
 ```
-
-
-
-
-hop_front --network ynov-network -e DB_SERVER=mariadb_hichem -e DB_NAME=prestashop_db -e DB_USER=prestashop_user -e DB_PASSWD=0000 -p 8080:80 -v prestashop_data_hichem:/var/data/html prestashop/prestashop
-  ```
-Access your application at ```localhost:8080```
-
-![prestashop](https://github.com/stdynv/Docker-Prestashop/assets/78117993/47827fcd-12c4-43e9-8f68-828912a178e1)
-
-**Optional Step Ping the app** 
-to ping the app on the backend/ frontend : 
-- access as root
-  
+2 - create priavte registry 
+if you don't have registry installed, please pull the image using this command
 ```docker
-docker exec -it mariadb bash
+docker pull registry
 ```
-- update packages :
-  
-```
-apt-get update
-```
-- install ping linux package
-  ```
-  apt-get install iputils-ping
-  ```
-- ping the application
-  
-  ```
-  ping mariadb
-  ```
-
-### Task2 setup
-**step1: Create two network adresses** 
-- front end nework
-```bash
-docker network create --subnet=10.0.0.0/24 ynov_front_network
-```
-- backend network
-```bash
-docker network create --subnet=10.0.0.0/24 ynov_back_network
-```
-**Step2 : Create new containers**
-- Server side container
+then to run it on port : 
 ```docker
-docker run -d --name mariadb_container \
---network ynov_back_network \
---ip 10.0.1.2 \
--e MYSQL_ROOT_PASSWORD=1234 \
--e MYSQL_DATABASE= prestashop_db \
--e MYSQL_USER=prestashop_user \
--e MYSQL_PASSWORD=1234 \
--v mariadb2:/var/lib/mysql \
-mariadb:latest
-```
-- front end container
-```docker
-docker run -d --name prestashop_container \
---network front_network \
---ip 10.0.0.2 \
--e DB_SERVER=10.0.1.2 \
--e DB_NAME=prestashop_db \
--e DB_USER=prestashop_user \
--e DB_PASSWD=1234 \
--v prestashop2:/var/www/html \
-prestashop/prestashop:latest
-```
-- Router : to communicate with the two contianers
-
-```
-docker run -d --name routeur \
---network ynov_front_network \
---network ynov_back_network \
---ip 10.0.0.2\
---ip 10.0.1.2\
--p 80:80 \
-nginx:latest
-```
-**Step3 : Router Configuration**
-- configurer les interface réseau des conteneurs
-```
-docker network disconnect ynov_front_network prestashop_container
-docker network connect --ip 10.0.0.2 ynov_front_network prestashop_container
-docker network disconnect ynov_back_network mariadb_container
-docker network connect --ip 10.0.2.1 ynov_back_network mariadb_container
+docker run -d -p 5000:5000 --restart always --name registry registry:latest
 ```
 
-**Step4 : Activate IP routage**
-- create file on ```/etc/sysctl.conf``` :
-```
-echo "net.ipv4.ip_forward=1" > /etc/sysctl.conf
-```
-- configure le routage sur le routeur
-```
-apt-get update
-apt-get install -y procps
-sysctl -p
-sysctl -w net.ipv4.ip_forward=1
-```
-
-**Step5 : join to networks**
-```
-docker exec routeur ip route add 10.0.0.2 via 10.0.1.1
-```
-```
-docker exec routeur ip route add 10.0.1.2 via 10.0.1.1
-```
-- runeach command separately :
-  ```
-  docker run --privileged -it routeur sh
-  docker exec -it routeur apt-get update
-  docker exec -it routeur apt-get install -y iproute2
-  docker exec -it routeur which ip
-  ```
-**Step6 : Vérifiy passerel**
-```
-docker exec -it prestashop_container ip route
-```
-```
-docker exec -it mariadb_container ip route
-```
-- Verify network config on router
-```
-docker exec routeur ip route
-```
-
-**FinalStep : check communication between the two containers**
-- install traceroute package
-  ```
-  docker exec prestashop_container apt-get update
-  docker exec prestashop_container apt-get install -y traceroute
-  ```
-- run traceroute command on each of network adresses :
-
-```
-docker exec -it prestashop_container traceroute 10.0.1.2
-```
-```
-docker exec -it mariadb_container ping 10.0.0.2
-```
