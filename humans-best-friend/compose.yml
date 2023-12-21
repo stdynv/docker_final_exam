@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  worker:
+    image: localhost:5000/humans-best-friend_worker
+    depends_on:
+      - redis
+      - db
+    networks:
+      - humansbestfriend-network
+
+  vote:
+    image: localhost:5000/humans-best-friend_vote
+    volumes:
+      - ./vote:/usr/local/app
+    ports:
+      - "5002:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - humansbestfriend-network
+
+  seed-data:
+    image: localhost:5000/humans-best-friend_seed-data
+    depends_on:
+      - vote
+    restart: "no"
+    networks:
+      - humansbestfriend-network
+
+  result:
+    image: localhost:5000/humans-best-friend_result
+    depends_on:
+      - db
+    volumes:
+      - ./result:/usr/local/app
+    ports:
+      - "5001:80"
+      - "9229:9229"
+    networks:
+      - humansbestfriend-network
+
+  redis:
+    image: redis:latest
+    networks:
+      - humansbestfriend-network
+
+  db:
+    image: postgres:latest
+    networks:
+      - humansbestfriend-network
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+      - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/postgres.sh
+      interval: "5s"
+
+networks:
+  humansbestfriend-network:
+
+volumes:
+  db-data:

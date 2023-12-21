@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    networks:
+      - humansbestfriend-network
+  vote:
+    build:
+      context: ./vote
+      dockerfile: Dockerfile
+    volumes:
+      - ./vote:/usr/local/app
+    networks:
+      - humansbestfriend-network
+  seed-data:
+    build:
+      context: ./seed-data
+      dockerfile: Dockerfile
+    depends_on:
+      - vote
+    restart: "no"
+    networks:
+      - humansbestfriend-network
+
+  result:
+    build:
+      context: ./result
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./result:/usr/local/app
+    networks:
+      - humansbestfriend-network
+
+  redis:
+    image: "redis:latest"
+    networks:
+      - humansbestfriend-network
+
+  db:
+    image: "postgres:latest"
+    networks:
+      - humansbestfriend-network
+
+networks:
+  humansbestfriend-network:
