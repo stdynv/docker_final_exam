@@ -115,3 +115,10 @@ What is my iP ?
 ip a
 ```
 
+- **To test the connection between containers**
+
+```docker
+docker exec -it <IDCONTAINER> ping -c 5 <IDCONTAINER2>
+```
+
+
