@@ -14,10 +14,8 @@
     - [Requirement](#requirement)
     - [Getting Started](#getting-started)
     - [Project Architecture](#project-architecture)
-- [Project setup](#project-setup)
-    - [Introduction](#introduction)
-    - [Task1 setup](#task1-setup)
-    - [Task2 setup](#task2-setup)
+- [How to use](#how-to-use)
+    - [Installation](#installation)
 
 ## Project overview
 ### Requirement
@@ -45,13 +43,23 @@ This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres 
 - You should have installed docker & docker-compose
 
 ### Installation 
-- clone the repository
+clone the repository using : 
   ```git clone https://github.com/stdynv/docker_final_exam ```
 
-
-```docker
-docker pull bitnami/prestashop:latest
+navigate to to the folder where the composers exists
+``` 
+cd /humans-best-friend
 ```
+1 - run docker build image compose file 
+```docker
+docker-compose -f docker-compose.build.yml build
+```
+it will build multiple images found on the dockerfile of the folders, to view the different images created you can run the command bellow 
+```docker
+docker iamges
+```
+
+
 
 
 hop_front --network ynov-network -e DB_SERVER=mariadb_hichem -e DB_NAME=prestashop_db -e DB_USER=prestashop_user -e DB_PASSWD=0000 -p 8080:80 -v prestashop_data_hichem:/var/data/html prestashop/prestashop
