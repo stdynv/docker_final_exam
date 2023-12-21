@@ -16,6 +16,7 @@
     - [Project Architecture](#project-architecture)
 - [How to use](#how-to-use)
     - [Installation](#installation)
+    - [Results](#results)
 
 ## Project overview
 ### Requirement
@@ -63,8 +64,51 @@ if you don't have registry installed, please pull the image using this command
 ```docker
 docker pull registry
 ```
-then to run it on port : 
+then run it on port 5000
 ```docker
 docker run -d -p 5000:5000 --restart always --name registry registry:latest
 ```
+Create tags for the images created 
+```docker
+docker tag humans-best-friend_worker localhost:5000/humans-best-friend_worker
+```
+```docker
+docker tag humans-best-friend_vote localhost:5000/humans-best-friend_vote
+```
+```docker
+docker tag humans-best-friend_result localhost:5000/humans-best-friend_result
+```
+```docker
+docker tag humans-best-friend_seed-data localhost:5000/humans-best-friend_seed-data
+```
+upload the dockers images to a remote registry (private)
+
+```docker
+docker push localhost:5000/humans-best-friend_vote
+```
+```docker
+docker push localhost:5000/humans-best-friend_result
+```
+```docker
+docker push localhost:5000/humans-best-friend_seed-data
+```
+```docker
+docker push localhost:5000/humans-best-friend_worker
+```
+to check if it's uploaded successefully : 
+```curl localhost:5000/v2/_catalog```
+
+3- using the ```compose.yml``` file we can create our container using this command :
+```docker
+ docker compose up -d
+```
+it will create and start the containers 
+
+### Results: 
+two interfaces are created, one for making the vote and the other the see the results of the votes
+
+to access to the vote ```ip_adress:5002```
+to access to the results ```ip_adress:5001```
+
+
 
