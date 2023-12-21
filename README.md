@@ -118,8 +118,7 @@ ip a
 - **To test the connection between containers**
 
 ```docker
-docker exec -it IDCONTAINER bash```
-```docker
+docker exec -it IDCONTAINER bash
 apt-get update
 apt-get install iputils-ping
 ```
