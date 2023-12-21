@@ -57,7 +57,7 @@ docker-compose -f docker-compose.build.yml build
 ```
 it will build multiple images found on the dockerfile of the folders, to view the different images created you can run the command bellow 
 ```docker
-docker iamges
+docker images
 ```
 2 - create priavte registry 
 if you don't have registry installed, please pull the image using this command
