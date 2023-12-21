@@ -14,39 +14,28 @@
     - [Requirement](#requirement)
     - [Getting Started](#getting-started)
     - [Project Architecture](#project-architecture)
-    - 
-    - [Task 1](#task-1)
-    - [Task 2](#task-2)
 - [Project setup](#project-setup)
     - [Introduction](#introduction)
     - [Task1 setup](#task1-setup)
     - [Task2 setup](#task2-setup)
 
-## Project Overview
-the project is divided into two tasks, the first consists of deploying the Prestashop application in the same network range, the second part becomes challenging separate the frontend from the server side by network range is to ensure communication between the two.
 ### Requirement
 
 - The project need to be done inside a virtual machine that run docker and docker compose. Follow the docker documentation as we saw during the course for installation instructions if you don't have it yet.
 
-### Getting started
+## Getting started
 
 This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
 
-
 ### Project Architecture
 
-![architeture diagram](https://github.com/stdynv/Docker-Prestashop/assets/78117993/5d48aaed-5194-45c8-a33a-9a5e7f925d59)
+![architeture diagram](https://github.com/stdynv/docker_final_exam/blob/main/humans-best-friend/architecture.png)
 
-### Task 1 
-Deploy this application inside a network. Make sure the two containers can communicate with each other using their names.
+### Tasks
 
-### Task 2
-create two networks with the cidr specified in the schemas. Please make use of `--subnet` for adding a subnet to the network when creating it. The name of the networks are `ynov-frontend-network` for the frontend website container and `ynov-backend-network` for the database container.
-*in order for the two containers to talk to each other* :
-- make use of a third container that can be called `gateway` or `router` and connect this container to the two above networks.
-- Inside the router gateway, configure the route table by using ip below command
-
-**Note**: The goal for the second task is not to deploy the application but to make sure the containers can talk to each other using their ips.
+1. Create a file called docker-compose.build.yml (not running containers). This file will be responsable for building the application images from the Dockerfile contents provided.
+2. The images that are build need to be published first in your publish docker registry and then in a private registry. Please make sure you have a frontend for the private registry as we saw in the course.
+3. Create another file called `compose.yml` and it will be responsible of deploying the application and all the needed containers. Please make sure that the images are referencing the one in your private registry.
 
 ## Project Setup
 
