@@ -110,5 +110,8 @@ two interfaces are created, one for making the vote and the other the see the re
 to access to the vote ```ip_adress:5002```
 to access to the results ```ip_adress:5001```
 
-
+What is my iP ? 
+```
+ip a
+```
 
