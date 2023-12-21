@@ -118,7 +118,16 @@ ip a
 - **To test the connection between containers**
 
 ```docker
+docker exec -it IDCONTAINER bash```
+```docker
+apt-get update
+apt-get install iputils-ping
+```
+
+```docker
 docker exec -it <IDCONTAINER> ping -c 5 <IDCONTAINER2>
 ```
+
+
 
 
