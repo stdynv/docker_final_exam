@@ -19,6 +19,7 @@
     - [Task1 setup](#task1-setup)
     - [Task2 setup](#task2-setup)
 
+## Project overview
 ### Requirement
 
 - The project need to be done inside a virtual machine that run docker and docker compose. Follow the docker documentation as we saw during the course for installation instructions if you don't have it yet.
@@ -37,43 +38,23 @@ This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres 
 2. The images that are build need to be published first in your publish docker registry and then in a private registry. Please make sure you have a frontend for the private registry as we saw in the course.
 3. Create another file called `compose.yml` and it will be responsible of deploying the application and all the needed containers. Please make sure that the images are referencing the one in your private registry.
 
-## Project Setup
+## How to use 
 
-### Introduction
-The prestashop image available [Prestashop image avaible here](https://hub.docker.com/r/bitnami/prestashop) can be used to deploy an e-commerce application. This application make use of two components. a fronten website and a database for storing persistante data.
+### Prerequisites
+- The project need to be done inside a virtual machine that run docker and docker compose. Follow the docker documentation as we saw during the course for installation instructions if you don't have it yet.
+- You should have installed docker & docker-compose
+
+### Installation 
+- clone the repository
+  ```git clone https://github.com/stdynv/docker_final_exam ```
 
 
 ```docker
 docker pull bitnami/prestashop:latest
 ```
 
-### Task1 Setup
 
-**Step 1: Create a docker network for the application**
-
-```docker
-docker network create ynov-network
-```
-**Step 2:  Create a volume for MariaDB and create a MariaDB container**
-- Create MariaDB volume
-```docker
-docker volume create --name mariadb_data
-```
-- Create a MariaDB container
-```docker
-docker run -d --name mariadb --network ynov-network \
--e MYSQL_ROOT_PASSWORD=0000 -e MYSQL_DATABASE=prestashop_db \
--e MYSQL_USER=prestashop_user -e MYSQL_PASSWORD=0000 \
--v mariadb_data:/var/lib/mysql mariadb
-```
-**Step 3: Create the frontend container** 
-- create frontend volume
-```docker
-docker volume create --name prestashop_data
-```
-- create frontend container
-  ```docker
-  docker run -d --name prestashop_front --network ynov-network -e DB_SERVER=mariadb_hichem -e DB_NAME=prestashop_db -e DB_USER=prestashop_user -e DB_PASSWD=0000 -p 8080:80 -v prestashop_data_hichem:/var/data/html prestashop/prestashop
+hop_front --network ynov-network -e DB_SERVER=mariadb_hichem -e DB_NAME=prestashop_db -e DB_USER=prestashop_user -e DB_PASSWD=0000 -p 8080:80 -v prestashop_data_hichem:/var/data/html prestashop/prestashop
   ```
 Access your application at ```localhost:8080```
 
